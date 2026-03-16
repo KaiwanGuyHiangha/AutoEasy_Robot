@@ -19,12 +19,7 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install System Dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y xvfb libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libasound2
-
-      - name: Setup Chrome
+      - name: Setup Chrome and Dependencies
         uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: stable
@@ -35,8 +30,7 @@ jobs:
 
       - name: Run Robot Tests
         run: |
-          xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
-          robot -d results tests/CreateNewCustomer_Ind_test.robot
+          robot -d results --variable BROWSER:headlesschrome tests/CreateNewCustomer_Ind_test.robot
 
       - name: Upload Test Reports
         if: always()
