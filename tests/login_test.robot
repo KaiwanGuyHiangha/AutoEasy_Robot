@@ -16,6 +16,7 @@ Open Browser And Login
     Call Method    ${options}    add_argument    --headless
     Call Method    ${options}    add_argument    --no-sandbox
     Call Method    ${options}    add_argument    --disable-dev-shm-usage
+
     Open Browser    ${URL}    chrome    options=${options}
     Maximize Browser Window
 
