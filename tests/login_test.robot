@@ -12,25 +12,18 @@ Suite Teardown    Close Browser
 
 *** Keywords ***
 Open Browser And Login
-    # 1. ให้ Python ไปหา Path ของ Driver ที่ตรงกับ Chrome 145 ของคุณ
-    
-    ${driver_path}=    Evaluate    webdriver_manager.chrome.ChromeDriverManager().install()    modules=webdriver_manager.chrome
-    
-    # 2. ตั้งค่า Chrome Options
     ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
-    Call Method    ${options}    add_argument    --headless=new
+    ${is_local}=    Run Keyword And Return Status    File Should Exist    C:/Program Files/Google/Chrome/Application/chrome.exe
+    IF    ${is_local}
+        ${options.binary_location}=    Set Variable    C:/Program Files/Google/Chrome/Application/chrome.exe
+    END
+
+    Call Method    ${options}    add_argument    --headless\=new
     Call Method    ${options}    add_argument    --no-sandbox
     Call Method    ${options}    add_argument    --disable-dev-shm-usage
-    Call Method    ${options}    add_argument    --window-size=1920,1080
     
-    # ปรับปรุง: เพิ่มความเสถียรสำหรับ Chrome เวอร์ชันใหม่ๆ
-    Call Method    ${options}    add_argument    --remote-allow-origins=*
-
-    # 3. สร้าง WebDriver (สำคัญมาก: ต้องใช้ Create Webdriver แทน Open Browser ปกติ)
-    Create Webdriver    Chrome    options=${options}    executable_path=${driver_path}
-    
-    # 4. ระบุ URL ที่ต้องการไป
-    Go To    ${URL}
+    Create Webdriver    Chrome    options=${options}
+    Go To    ${BASE_URL}
     Maximize Browser Window
 
 
