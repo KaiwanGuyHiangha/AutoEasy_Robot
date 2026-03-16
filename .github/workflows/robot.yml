@@ -11,21 +11,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
+      - name: Setup Chrome and ChromeDriver
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
+
       - name: Install Dependencies
         run: |
-          pip install robotframework
-          pip install robotframework-seleniumlibrary
-          pip install selenium
-
-      - name: Install Google Chrome
-        run: |
-            sudo apt-get update
-            sudo apt-get install -y google-chrome-stable
+          pip install robotframework robotframework-seleniumlibrary selenium webdriver-manager
 
       - name: Run Robot Tests
         run: |
+          # บน Linux เราต้องรันผ่าน Xvfb หรือมั่นใจว่าโค้ดใช้ --headless
           robot -d results tests/CreateNewCustomer_Ind_test.robot
