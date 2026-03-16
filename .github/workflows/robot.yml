@@ -3,26 +3,14 @@ name: Robot Framework Tests
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, windows]
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Setup Chrome and Dependencies
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: stable
 
       - name: Install Python Dependencies
         run: |
@@ -30,7 +18,7 @@ jobs:
 
       - name: Run Robot Tests
         run: |
-          robot -d results --variable BROWSER:headlesschrome tests/CreateNewCustomer_Ind_test.robot
+          robot -d results tests/CreateNewCustomer_Ind_test.robot
 
       - name: Upload Test Reports
         if: always()
