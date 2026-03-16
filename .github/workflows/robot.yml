@@ -22,7 +22,13 @@ jobs:
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y xvfb libnss3 libgconf-2-4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libasound2
+          # ตัด libgconf-2-4 ออกเพื่อให้รันบน Ubuntu 24.04 ได้
+          sudo apt-get install -y xvfb libnss3 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libasound2
+
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
 
       - name: Install Python Dependencies
         run: |
@@ -30,13 +36,12 @@ jobs:
 
       - name: Run Robot Tests
         run: |
-          # ใช้ xvfb-run เพื่อสร้างหน้าจอจำลอง (Virtual Display) 
-          # ช่วยลดปัญหา Browser Crash บน Linux ได้ดีมาก
+          # ใช้ xvfb-run เพื่อจำลองหน้าจอ และรัน Robot Framework
           xvfb-run --auto-servernum --server-args="-screen 0 1920x1080x24" \
           robot -d results tests/CreateNewCustomer_Ind_test.robot
 
       - name: Upload Test Reports
-        if: always() # ให้ทำงานเสมอแม้ Test จะ Fail เพื่อเอา Log มาดู
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: robot-framework-report
