@@ -21,8 +21,10 @@ jobs:
           pip install robotframework-seleniumlibrary
           pip install selenium
 
-      - name: Setup Chrome
-        uses: browser-actions/setup-chrome@v1
+      - name: Install Google Chrome
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y google-chrome-stable
 
       - name: Run Robot Tests
         run: |
