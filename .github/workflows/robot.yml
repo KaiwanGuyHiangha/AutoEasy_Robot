@@ -3,22 +3,19 @@ name: Robot Framework Tests
 on:
   push:
     branches: [ main ]
-  workflow_dispatch:
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Install Python Dependencies
+      - name: Install Dependencies
         run: |
           pip install robotframework
           pip install robotframework-seleniumlibrary
@@ -30,9 +27,3 @@ jobs:
       - name: Run Robot Tests
         run: |
           robot -d results tests/CreateNewCustomer_Ind_test.robot
-
-      - name: Upload Robot Results
-        uses: actions/upload-artifact@v4
-        with:
-          name: robot-results
-          path: results
