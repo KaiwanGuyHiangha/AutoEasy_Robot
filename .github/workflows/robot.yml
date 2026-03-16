@@ -18,7 +18,7 @@ jobs:
 
       - name: Run Robot Tests
         run: |
-          robot -d results tests/CreateNewCustomer_Ind_test.robot
+          robot -d results tests/CrNew_Cust_PS_BK.robot
 
       - name: Upload Test Reports
         if: always()
