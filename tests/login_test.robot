@@ -11,24 +11,18 @@ Suite Teardown   Close Browser
 
 *** Keywords ***
 Open Browser And Login
-    # 1. ตั้งค่า Chrome Options เพื่อความเสถียร
+    # 1. ตั้งค่า Chrome Options ให้เป็น Headless (ไม่เปิดหน้าจอ)
     ${options}=    Evaluate    sys.modules['selenium.webdriver'].ChromeOptions()    sys, selenium.webdriver
-    Call Method    ${options}    add_argument    --start-maximized
-    Call Method    ${options}    add_argument    --remote-allow-origins=*
+    Call Method    ${options}    add_argument    --headless
     Call Method    ${options}    add_argument    --no-sandbox
     Call Method    ${options}    add_argument    --disable-dev-shm-usage
-    
-    # สำคัญมากสำหรับการรันบน GitHub Actions (CI/CD)
-    Call Method    ${options}    add_argument    --headless
+    Call Method    ${options}    add_argument    --disable-gpu
+    Call Method    ${options}    add_argument    --window-size\=1920,1080
+    Call Method    ${options}    add_argument    --remote-allow-origins=*
 
-    # 2. ใช้ WebDriver Manager โหลด Driver ให้ตรงกับเวอร์ชัน Chrome อัตโนมัติ
-    ${driver_path}=    Evaluate    sys.modules['webdriver_manager.chrome'].ChromeDriverManager().install()    sys, webdriver_manager.chrome
-    ${service}=       Evaluate    sys.modules['selenium.webdriver.chrome.service'].Service(executable_path=r'${driver_path}')    sys, selenium.webdriver.chrome.service
-
-    # 3. สร้าง Webdriver
-    Create Webdriver    Chrome    service=${service}    options=${options}
-
-    Go To    ${URL}
+    # 2. เปิด Browser และไปยัง URL ที่กำหนดทันที
+    # ใช้ Open Browser เพียงคำสั่งเดียว จะเสถียรกว่าการใช้ Create Webdriver ซ้ำซ้อน
+    Open Browser    ${URL}    browser=chrome    options=${options}
 
 *** Test Cases ***
 Login Success
